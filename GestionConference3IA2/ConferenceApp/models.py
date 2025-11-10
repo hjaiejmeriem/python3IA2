@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MaxLengthValidator
 from django.core.exceptions import ValidationError
+import uuid
+
 # Create your models here.
 import uuid
 def generate_submission_id():

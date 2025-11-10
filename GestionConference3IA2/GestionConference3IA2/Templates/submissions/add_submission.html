@@ -1,0 +1,7 @@
+<h2>Nouvelle soumission</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Soumettre</button>
+</form>
+<a href="{% url 'list_submissions' %}">Annuler</a>

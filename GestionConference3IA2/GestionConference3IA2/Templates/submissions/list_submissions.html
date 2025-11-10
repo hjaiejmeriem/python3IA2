@@ -1,0 +1,47 @@
+<!-- templates/submissions/list_submissions.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Mes soumissions</h2>
+
+{% if submissions %}
+<table>
+    <thead>
+        <tr>
+            <th>Titre</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for submission in submissions %}
+        <tr>
+            <td>{{ submission.title }}</td>
+            <td>
+                {% if submission.status == 'submitted' %}Soumis
+                {% elif submission.status == 'under_review' %}En révision
+                {% elif submission.status == 'accepted' %}Accepté
+                {% elif submission.status == 'rejected' %}Rejeté
+                {% else %}{{ submission.status }}{% endif %}
+            </td>
+            <td>{{ submission.user.username }}</td>
+            <td>{{ submission.conference.name }}</td>
+            <td>{{ submission.submission_date|date:"d/m/Y" }}</td>
+            <td>
+                {% if submission.payed %}
+                    <span style="color: green;">Payé</span>
+                {% else %}
+                    <span style="color: red;">Non payé</span>
+                {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'detail_submission' submission.submission_id %}">Détails</a>
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Aucune soumission trouvée.</p>
+{% endif %}
+
+<a href="{% url 'add_submission' %}">Nouvelle soumission</a>
+{% endblock %}

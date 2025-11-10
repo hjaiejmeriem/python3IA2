@@ -1,0 +1,31 @@
+<!-- templates/submissions/detail_submission.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ submission.title }}</h2>
+
+<p><strong>Statut :</strong> 
+    {% if submission.status == 'submitted' %}Soumis
+    {% elif submission.status == 'under_review' %}En révision
+    {% elif submission.status == 'accepted' %}Accepté
+    {% elif submission.status == 'rejected' %}Rejeté
+    {% else %}{{ submission.status }}{% endif %}
+</p>
+
+<p><strong>Conférence :</strong> {{ submission.conference.name }}</p>
+<p><strong>Auteur :</strong> {{ submission.user.username }}</p>
+<p><strong>Date de soumission :</strong> {{ submission.submission_date|date:"d/m/Y" }}</p>
+
+<p><strong>Résumé :</strong> {{ submission.abstract }}</p>
+<p><strong>Mots-clés :</strong> {{ submission.keywords }}</p>
+
+<p>
+    <strong>PDF :</strong> 
+    {% if submission.paper %}
+        <a href="{{ submission.paper.url }}" download>Télécharger</a>
+    {% else %}
+        Aucun fichier
+    {% endif %}
+</p>
+
+<a href="{% url 'list_submissions' %}">Retour à la liste</a>
+{% endblock %}
