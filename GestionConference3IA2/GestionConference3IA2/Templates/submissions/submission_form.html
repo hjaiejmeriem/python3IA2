@@ -1,0 +1,18 @@
+<!-- On étend le template de base pour garder l'en-tête, footer et styles globaux -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Nouvelle soumission</h2>
+
+<!-- Formulaire pour créer ou modifier une soumission -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}  <!-- Protection contre les attaques CSRF -->
+
+    {{ form.as_p }}   <!-- Affiche tous les champs du formulaire avec <p> autour -->
+
+    <button type="submit">Soumettre</button> <!-- Bouton pour envoyer le formulaire -->
+</form>
+
+<!-- Lien pour revenir à la liste des soumissions sans envoyer le formulaire -->
+<a href="{% url 'list_submissions' %}">Annuler</a>
+{% endblock %}

@@ -1,0 +1,67 @@
+<!-- Étend le template de base -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Mes soumissions</h2>
+
+<!-- Vérifie s'il y a des soumissions à afficher -->
+{% if submissions %}
+<table border="1">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Status</th>
+            <th>Username</th>
+            <th>Nom de la conférence</th>
+            <th>Date de soumission</th>
+            <th>Payement</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Boucle sur toutes les soumissions de l'utilisateur -->
+        {% for submission in submissions %}
+        <tr>
+            <td>{{ submission.title }}</td>
+
+            <!-- Affichage du statut en français -->
+            <td>
+                {% if submission.status == 'submitted' %}Soumis
+                {% elif submission.status == 'under_review' %}En révision
+                {% elif submission.status == 'accepted' %}Accepté
+                {% elif submission.status == 'rejected' %}Rejeté
+                {% else %}{{ submission.status }}{% endif %}
+            </td>
+
+            <!-- Affichage de l'auteur et de la conférence -->
+            <td>{{ submission.user.username }}</td>
+            <td>{{ submission.conference.name }}</td>
+
+            <!-- Formatage de la date -->
+            <td>{{ submission.submission_date|date:"d/m/Y" }}</td>
+
+            <!-- Statut du payement -->
+            <td>
+                {% if submission.payed %}
+                    <span style="color: green;">Payé</span>
+                {% else %}
+                    <span style="color: red;">Non payé</span>
+                {% endif %}
+            </td>
+
+            <!-- Lien vers la page de détails -->
+            <td>
+                <a href="{% url 'detail_submission' submission.submission_id %}">Détails</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<p>Aucune soumission trouvée.</p>
+{% endif %}
+
+<!-- Lien pour créer une nouvelle soumission -->
+<a href="{% url 'add_submission' %}">Nouvelle soumission</a>
+{% endblock %}

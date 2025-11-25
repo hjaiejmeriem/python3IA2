@@ -1,6 +1,12 @@
-<p>Voulez_vous supprimer la conference {{object.name}} ?</p>
+<!-- Affiche un message demandant confirmation -->
+<p>Voulez-vous supprimer la conférence {{ object.name }} ?</p>
+
+<!-- Formulaire pour confirmer la suppression -->
 <form method="post">
-    {% csrf_token %}
-    <button type="submit">Confirmer la suppression</button>
-    <a href="{% url 'liste_conferences' %}">Annuler</a>
+    {% csrf_token %} <!-- Protection contre les attaques CSRF -->
+
+    <button type="submit">OUI</button> <!-- Si l'utilisateur clique sur OUI, la suppression est envoyée -->
+
+    <!-- Lien pour annuler et revenir à la liste des conférences -->
+    <a href="{% url 'liste_conferences' %}">Non</a>
 </form>

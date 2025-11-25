@@ -1,20 +1,55 @@
 {% extends 'base.html' %}
+
 {% block content %}
+<!-- Début du bloc de contenu spécifique à cette page -->
+
 <h1>La liste des conférences</h1>
+
+<!-- Vérifie si l'utilisateur est connecté et fait partie du comité -->
+{% if user.is_authenticated and user.role == "commitee" %} 
+    <!-- Lien pour ajouter une nouvelle conférence (visible uniquement pour les membres du comité) -->
+    <a href="{% url 'conference_add' %}">Ajouter une conférence</a>
+{% endif %}
+
+<!-- Début du tableau affichant toutes les conférences -->
 <table border="1">
 
-    <tr><td>Title</td><td>Theme</td> <td>Date de conférences</td><td>Actions</td></tr>
+    <!-- En-tête du tableau -->
+    <tr>
+        <td>Title</td>
+        <td>Theme</td>
+        <td>Date de conférences</td>
+        <td>Actions</td>
+    </tr>
   
+    <!-- Boucle sur chaque conférence passée depuis la vue -->
     {% for c in liste %}
     <tr>
+        <!-- Nom de la conférence -->
         <td>{{ c.name }}</td>
-        <td>{{c.theme}}</td>
-        <td>{{c.start_date}} - {{c.end_date}}</td>
-        <td><a href="{% url 'conference_details' c.pk %}">Détails</a>
-        <a href="{% url 'conference_update' c.pk %}">Update</a>
-        <a href="{% url 'conference_Delete' c.pk %}">Delete</a></td>
+
+        <!-- Thème de la conférence -->
+        <td>{{ c.theme }}</td>
+
+        <!-- Dates de début et de fin -->
+        <td>{{ c.start_date }} - {{ c.end_date }}</td>
+
+        <!-- Lien pour voir les détails de la conférence -->
+        <td><a href="{% url 'conference_details' c.pk %}">Détails</a></td>
+
+        <!-- Lien pour ajouter une soumission -->
+        <td><a href="{% url 'add_submission' %}">Ajouter Submissions</a></td>
+
+        <!-- Si l'utilisateur est membre du comité, afficher les liens Update et Supprimer -->
+        {% if user.is_authenticated and user.role == "commitee" %}
+            <!-- Lien pour modifier la conférence -->
+            <a href="{% url 'conference_update' c.pk %}">Update</a>
+            <!-- Lien pour supprimer la conférence -->
+            <a href="{% url 'conference_delete' c.pk %}">Supprimer</a>
+        {% endif %}
     </tr>
     {% endfor %}
 </table>
-{% endblock %}
 
+<!-- Fin du bloc content -->
+{% endblock %}

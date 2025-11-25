@@ -1,0 +1,14 @@
+<h2>Nouvelle soumission</h2>
+
+<!-- Formulaire pour créer une nouvelle soumission -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!-- Affiche le formulaire Django automatiquement avec chaque champ dans un <p> -->
+    {{ form.as_p }}
+
+    <!-- Bouton pour envoyer le formulaire -->
+    <button type="submit">Soumettre</button>
+</form>
+
+<!-- Lien pour annuler et revenir à la liste des soumissions -->
+<a href="{% url 'list_submissions' %}">Annuler</a>

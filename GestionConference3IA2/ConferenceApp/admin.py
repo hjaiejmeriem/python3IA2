@@ -1,60 +1,97 @@
 from django.contrib import admin
 from .models import Conference, Submission
-# Register your models here.
-admin.site.site_title="Gestion Conférence 25/26"
-admin.site.site_header="Gestion Conférences"
-admin.site.index_title="django App conférence"
-#admin.site.register(Conference)
-#admin.site.register(Submission)
 
+# Personnalisation générale de l'admin Django
+admin.site.site_title = "Gestion Conférence 25/26"
+admin.site.site_header = "Gestion Conférences"
+admin.site.index_title = "Django App Conférence"
+
+# ---------------------------
+# Inline : Submissions dans Conference
+# ---------------------------
 class SubmissionInline(admin.TabularInline):
     model = Submission
-    extra= 1
-    readonly_fields =("submission_date",)
+    extra = 1  # une ligne vide par défaut
+    readonly_fields = ("submission_date",)  # champ non modifiable
 
+
+# ---------------------------
+# Admin du modèle Conference
+# ---------------------------
 @admin.register(Conference)
 class AdminConferenceModel(admin.ModelAdmin):
-    list_display=("name","theme","start_date","end_date","a")
-    ordering=("start_date",)
-    list_filter=("theme",)
-    search_fields=("description","name")
-    date_hierarchy="start_date"
-    fieldsets =(
-        ("Information general", {
-            "fields":("conference_id","name","theme","description")
+
+    # Colonnes affichées dans la liste
+    list_display = ("name", "theme", "start_date", "end_date", "a")
+
+    # Tri par date
+    ordering = ("start_date",)
+
+    # Filtres latéraux
+    list_filter = ("theme",)
+
+    # Recherche
+    search_fields = ("description", "name")
+
+    # Navigation temporelle
+    date_hierarchy = "start_date"
+
+    # Organisation du formulaire
+    fieldsets = (
+        ("Information générales", {
+            "fields": ("conference_id", "name", "theme", "description")
         }),
-        ("logistics Info", {
-            "fields":("location","start_date","end_date")
+        ("Informations logistiques", {
+            "fields": ("location", "start_date", "end_date")
         })
     )
-    readonly_fields=("conference_id",)
-    def a(self,objet):
+
+    # Champ non modifiable
+    readonly_fields = ("conference_id",)
+
+    # Méthode qui calcule la durée d'une conférence
+    def a(self, objet):
         if objet.start_date and objet.end_date:
-            return (objet.end_date-objet.start_date).days
+            return (objet.end_date - objet.start_date).days
         return "RAS"
-    a.short_description="Duration (days)"
-    inlines=[SubmissionInline]
+    a.short_description = "Duration (days)"
 
-@admin.action(description="marquer les soumissions comme payés")
-def mark_as_payed(modeladmin,req,queryset):
+    # Inline pour afficher les Submissions liées
+    inlines = [SubmissionInline]
+
+
+# ---------------------------
+# Actions personnalisées
+# ---------------------------
+
+@admin.action(description="Marquer comme payées")
+def mark_as_payed(modeladmin, req, queryset):
     queryset.update(payed=True)
-@admin.action
-def mark_as_accepted(m,rq,q):
-    q.update(status="accepted") 
+
+@admin.action(description="Marquer comme acceptées")
+def mark_as_accepted(modeladmin, req, queryset):
+    queryset.update(status="accepted")
 
 
+# ---------------------------
+# Admin du modèle Submission
+# ---------------------------
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display =("title", "status", "payed","submission_date")
-    fieldsets =(
-        ("Information general", {
-            "fields":("title","abstract","keywords")
+
+    list_display = ("title", "status", "payed", "submission_date")
+
+    fieldsets = (
+        ("Information générales", {
+            "fields": ("title", "abstract", "keywords")
         }),
-        ("document", {
-            "fields":("paper","user","conference")
+        ("Document", {
+            "fields": ("paper", "user", "conference")
         }),
-        ("Status", {
-            "fields":("status","payed")
+        ("Statut", {
+            "fields": ("status", "payed")
         })
     )
-    actions =[mark_as_payed,mark_as_accepted]
+
+    # Ajout des actions
+    actions = [mark_as_payed, mark_as_accepted]

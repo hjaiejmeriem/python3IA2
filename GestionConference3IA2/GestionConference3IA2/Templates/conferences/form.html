@@ -1,10 +1,16 @@
 {% if view.object.pk %}
-<h1>Formulaire de modification {{object.name}}</h1>
+    <!-- Si l'objet existe (on est en modification) -->
+    <h1>Formulaire de modification : {{ object.name }}</h1>
 {% else %}
-<h1>Formulaire d'ajout</h1>
+    <!-- Si aucun objet (on est en création) -->
+    <h1>Formulaire d'ajout</h1>
 {% endif %}
+
+<!-- Formulaire pour créer ou modifier une conférence -->
 <form method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Enregister</button>
+    {% csrf_token %}  <!-- Protection contre les attaques CSRF -->
+
+    {{ form.as_p }}   <!-- Affiche tous les champs du formulaire avec <p> autour -->
+
+    <button type="submit">Enregistrer</button> <!-- Bouton pour envoyer le formulaire -->
 </form>

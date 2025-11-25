@@ -1,16 +1,27 @@
 <html>
 <head>
+
+</head>
 <body>
     <nav>
         <a>Home</a>
         <a href="{% url 'liste_conferences' %}">Conférences</a>
+        <a href="{% url 'list_submissions' %}">Submissions</a>
         <a>Contact</a>
+        {% if user.is_authenticated %}
+         <a> {{user.username}}</a>
+         <a href="{% url 'logout' %}"> Logout</a>
+        {% else %}
+
+         <a href="{% url 'login' %}">Connexion</a>
+         <a href="{% url 'register' %}">Inscription </a>
+         {% endif %}
     </nav>
     {% block content %}
-    {% endblock %}  
+    {% endblock %}
     <footer>
-        <p>Workshop 25/26 -Django 3IA2</p>
-    </footer>  
+        <p>Workshop 25/26 - Django 3IA2</p>
+    </footer>
 </body>
-</head>   
+
 </html>
